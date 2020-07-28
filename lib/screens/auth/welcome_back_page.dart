@@ -79,17 +79,6 @@ class _WelcomeBackPageState extends State<WelcomeBackPage> {
             }
         });
       },
-
-
-//      validator: (String value) {
-//        if (value.isEmpty) return 'UserName is required';
-//
-//
-//        return null;
-//      },
-//      onSaved: (String value) {
-//        _uname = value;
-//      },
     );
 
   }

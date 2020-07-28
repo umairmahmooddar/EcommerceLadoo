@@ -1,4 +1,4 @@
-#Mon Jul 27 23:45:15 PKT 2020
+#Tue Jul 28 17:36:38 PKT 2020
 base.0=E\:\\Project\\EcommerceLadoo\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex
 path.0=classes.dex
 renamed.0=classes.dex

@@ -18,6 +18,120 @@ class _RegisterPageState extends State<RegisterPage> {
 
   TextEditingController cmfPassword = TextEditingController();
 
+  bool username_Enable = false;
+  bool pass_Enable = false;
+  bool is_number = false;
+  bool is_username = false;
+  bool password_identifier;
+  bool button_Enable = false;
+  bool password_varified = false;
+  bool cmf_pass = false;
+
+  bool isPasswordAuthentic(String password) {
+    int Length = 8;
+    if (password.isEmpty) {
+      return false;
+    }
+    bool hasUppercase = password.contains(new RegExp(r'[A-Z]'));
+    bool hasDigits = password.contains(new RegExp(r'[0-9]'));
+    bool hasLowercase = password.contains(new RegExp(r'[a-z]'));
+    bool hasMinLength = password.length > Length;
+    return hasDigits & hasUppercase & hasLowercase & hasMinLength;
+  }
+
+  Widget _buildUsername() {
+    return TextField(
+      decoration: InputDecoration(
+          labelText: 'UserNme / PhoneNumber', icon: Icon(Icons.person)),
+      controller: email,
+      onChanged: (String value) {
+        setState(() {
+          if ((RegExp(r"^[a-zA-Z0-9]+$").hasMatch(value)) &&
+              value.length > 10) {
+            is_username = true;
+          } else {
+            is_username = false;
+          }
+          if (RegExp(r"/^[0-9]{11}$/").hasMatch(value)) {
+            is_number = true;
+          } else {
+            is_number = false;
+          }
+
+          if (is_number == true || is_username == true) {
+            username_Enable = true;
+          } else {
+            username_Enable = false;
+          }
+        });
+      },
+    );
+  }
+
+  Widget _buildcmfPassword() {
+    return TextField(
+      enabled: pass_Enable ? true : false,
+      obscureText: true,
+      controller: cmfPassword,
+      decoration: InputDecoration(
+        labelText: 'Conformation Password',
+        icon: Icon(Icons.lock),
+        errorText: isPasswordAuthentic(cmfPassword.text)
+            ? PasswordVarification()
+                ? 'Password Varified'
+                : 'Please Enter The Same Password'
+            : 'Please Enter Varified Password',
+      ),
+      onChanged: (String value) {
+        setState(() {
+          password_identifier = password.text.isNotEmpty;
+          if (password_identifier == true) {
+            cmf_pass = true;
+            if (cmf_pass == true && username_Enable == true) {
+              button_Enable = true;
+            } else {
+              button_Enable = false;
+            }
+          }
+        });
+        return null;
+      },
+    );
+  }
+
+  Widget _buildPassword() {
+    return TextField(
+      enabled: username_Enable ? true : false,
+      obscureText: true,
+      controller: password,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        icon: Icon(Icons.lock),
+        errorText: isPasswordAuthentic(password.text)
+            ? 'Varified'
+            : 'Please Enter Varified Password',
+      ),
+      onChanged: (String value) {
+        setState(() {
+          password_identifier = isPasswordAuthentic(value);
+          if (password_identifier == true) {
+            pass_Enable = true;
+            if (pass_Enable == true && username_Enable == true) {
+              button_Enable = true;
+            } else {
+              button_Enable = false;
+            }
+          }
+        });
+        return null;
+      },
+    );
+  }
+
+  bool PasswordVarification() {
+    return (password.text == cmfPassword.text) ? true : false;
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget title = Text(
@@ -49,10 +163,12 @@ class _RegisterPageState extends State<RegisterPage> {
       left: MediaQuery.of(context).size.width / 4,
       bottom: 40,
       child: InkWell(
-        onTap: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => ForgotPasswordPage()));
-        },
+        onTap: PasswordVarification() && cmf_pass
+            ? () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => ForgotPasswordPage()));
+              }
+            : null,
         child: Container(
           width: MediaQuery.of(context).size.width / 2,
           height: 80,
@@ -96,18 +212,9 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              RoundedInputField(
-                hintText: "Enter Email or Phone Number",
-                onChanged: (email) {},
-              ),
-              RoundedPasswordField(
-                hintText: "Password",
-                onChanged: (password) {},
-              ),
-              RoundedPasswordField(
-                hintText: "Confirm Password",
-                onChanged: (cmfPassword) {},
-              ),
+              _buildUsername(),
+              _buildPassword(),
+              _buildcmfPassword(),
             ],
           ),
         ),
