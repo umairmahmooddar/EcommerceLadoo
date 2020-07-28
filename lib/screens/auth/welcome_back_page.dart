@@ -54,7 +54,7 @@ class _WelcomeBackPageState extends State<WelcomeBackPage> {
         setState(() {
 
 
-        if( (RegExp(r"^[a-zA-Z0-9]+$").hasMatch(value) ) && value.length > 10)
+        if( (RegExp(r"^[a-zA-Z0-9]+$").hasMatch(value) ) && value.length >=10)
           {
             
             is_username = true;
@@ -221,7 +221,7 @@ class _WelcomeBackPageState extends State<WelcomeBackPage> {
         children: <Widget>[
           Center(
             child: Container(
-              height: 160,
+              height: 180,
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.only(left: 32.0, right: 32.0, top: 0),
               decoration: BoxDecoration(

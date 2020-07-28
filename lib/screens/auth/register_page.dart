@@ -13,6 +13,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   TextEditingController email = TextEditingController();
+  TextEditingController uname = TextEditingController();
 
   TextEditingController password = TextEditingController();
 
@@ -26,6 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
   bool button_Enable = false;
   bool password_varified = false;
   bool cmf_pass = false;
+  bool email_Enable = false;
 
   bool isPasswordAuthentic(String password) {
     int Length = 8;
@@ -39,15 +41,42 @@ class _RegisterPageState extends State<RegisterPage> {
     return hasDigits & hasUppercase & hasLowercase & hasMinLength;
   }
 
-  Widget _buildUsername() {
+
+  Widget _builEmail() {
     return TextField(
       decoration: InputDecoration(
-          labelText: 'UserNme / PhoneNumber', icon: Icon(Icons.person)),
+          labelText: 'Email',
+
+          icon: Padding(
+              padding: EdgeInsets.fromLTRB(10, 20, 0, 20),
+              child: Icon(Icons.person))),
+      keyboardType: TextInputType.emailAddress,
       controller: email,
       onChanged: (String value) {
         setState(() {
+          if ((RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(value))) {
+            email_Enable = true;
+          } else {
+            email_Enable = false;
+          }
+        });
+      },
+    );
+  }
+
+  Widget _buildUsername() {
+    return TextField(
+      enabled: email_Enable ? true : false,
+      decoration: InputDecoration(
+          labelText: 'UserNme / PhoneNumber',
+          icon: Padding(
+              padding: EdgeInsets.fromLTRB(10, 20, 0, 20),
+              child: Icon(Icons.person))),
+      controller: uname,
+      onChanged: (String value) {
+        setState(() {
           if ((RegExp(r"^[a-zA-Z0-9]+$").hasMatch(value)) &&
-              value.length > 10) {
+              value.length >=10) {
             is_username = true;
           } else {
             is_username = false;
@@ -75,7 +104,9 @@ class _RegisterPageState extends State<RegisterPage> {
       controller: cmfPassword,
       decoration: InputDecoration(
         labelText: 'Conformation Password',
-        icon: Icon(Icons.lock),
+        icon: Padding(
+            padding: EdgeInsets.fromLTRB(10, 20, 0, 20),
+            child: Icon(Icons.lock)),
         errorText: isPasswordAuthentic(cmfPassword.text)
             ? PasswordVarification()
                 ? 'Password Varified'
@@ -106,7 +137,10 @@ class _RegisterPageState extends State<RegisterPage> {
       controller: password,
       decoration: InputDecoration(
         labelText: 'Password',
-        icon: Icon(Icons.lock),
+        icon: Padding(
+            padding: EdgeInsets.fromLTRB(10, 20, 0, 20),
+            child: Icon(Icons.lock)
+        ),
         errorText: isPasswordAuthentic(password.text)
             ? 'Varified'
             : 'Please Enter Varified Password',
@@ -171,7 +205,7 @@ class _RegisterPageState extends State<RegisterPage> {
             : null,
         child: Container(
           width: MediaQuery.of(context).size.width / 2,
-          height: 80,
+          height: 70,
           child: Center(
               child: new Text("Register",
                   style: const TextStyle(
@@ -197,8 +231,9 @@ class _RegisterPageState extends State<RegisterPage> {
       padding: EdgeInsets.only(bottom: 20),
       child: SingleChildScrollView(
         child: Container(
-          height: 250,
+          height: 300,
           width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.only(left:10,right: 20),
           margin: EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
             color: Color.fromRGBO(255, 255, 255, 0.8),
@@ -212,6 +247,7 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              _builEmail(),
               _buildUsername(),
               _buildPassword(),
               _buildcmfPassword(),
@@ -327,17 +363,17 @@ class _RegisterPageState extends State<RegisterPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(height: MediaQuery.of(context).size.height * 0.15),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.13),
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: title,
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: subTitle,
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                 registerForm,
                 Center(child: registerButton),
                 Center(child: orDivider),
